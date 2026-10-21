@@ -70,7 +70,10 @@ ${page.noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonica
 <meta name="twitter:title" content="${esc(page.title)}">
 <meta name="twitter:description" content="${esc(page.description)}">
 <meta name="twitter:image" content="${esc(image)}">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Reem+Kufi:wght@500&display=swap">
@@ -82,7 +85,7 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 <a class="skip" href="#main">تخطَّ إلى المحتوى</a>
 <header class="site-head">
   <div class="wrap">
-    <a class="brand" href="/" aria-label="${SITE_NAME}: الصفحة الرئيسية">${ic('falcon')}<span><span class="brand-name">4saud</span><span class="brand-tag">${SITE_TAG}</span></span></a>
+    <a class="brand" href="/" aria-label="${SITE_NAME}: الصفحة الرئيسية"><span class="brand-mark"><img src="/assets/falcon_color.svg" alt="شعار 4saud" width="40" height="41"></span><span><span class="brand-name">4saud</span><span class="brand-tag">${SITE_TAG}</span></span></a>
     <nav class="nav" aria-label="القائمة الرئيسية"><ul>${nav}</ul></nav>
   </div>
   ${DUNES}

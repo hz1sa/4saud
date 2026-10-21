@@ -112,8 +112,88 @@ async function buildBrandImages() {
   }
   await sharp(px, { raw: { width: S, height: S, channels: 4 } }).png({ palette: true, colors: 8, compressionLevel: 9 }).toFile(path.join(assets, 'sand.png'));
   await sharp(path.join(LEGACY, 'images/gDSC00396.jpg')).resize(1200, 630, { fit: 'cover', position: 'centre' }).jpeg({ quality: 78 }).toFile(path.join(assets, 'og.jpg'));
-  await sharp(path.join(ROOT, 'src/assets/favicon.svg')).resize(512, 512).png().toFile(path.join(assets, 'logo.png'));
-  await sharp(path.join(ROOT, 'src/assets/favicon.svg')).resize(180, 180).png().toFile(path.join(DIST, 'apple-touch-icon.png'));
+}
+
+// ---------- الشعار والأيقونات ----------
+// المصادر: src/assets/brand-opt/ (نسخ svgo من src/assets/brand/). الألوان من لوحة الموقع.
+const BRAND = path.join(ROOT, 'src/assets/brand-opt');
+const INK = '#4a2f1b';   // --coffee: البني الداكن الأساسي
+const SAND = '#eadbbd';  // --paper-2: رملي فاتح للوضع الداكن
+const PAPER = '#f3e8d2'; // --paper: خلفية الأيقونات غير الشفافة
+
+// مربّع حول حدود الرسم الفعلية بهوامش متساوية (الـ viewBox الأصلي 1217×1241 غير مربع)
+async function squareViewBox(svgFile, margin = 0.08) {
+  const { info } = await sharp(svgFile).png().trim({ threshold: 1 }).toBuffer({ resolveWithObject: true });
+  const x = -info.trimOffsetLeft, y = -info.trimOffsetTop;
+  const side = Math.max(info.width, info.height) * (1 + 2 * margin);
+  const cx = x + info.width / 2, cy = y + info.height / 2;
+  return [cx - side / 2, cy - side / 2, side, side].map(n => +n.toFixed(1)).join(' ');
+}
+
+// ملف ICO يضم صور PNG (تدعمه كل المتصفحات الحديثة)
+function ico(pngs) {
+  const header = Buffer.alloc(6 + 16 * pngs.length);
+  header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(pngs.length, 4);
+  let offset = header.length;
+  pngs.forEach(({ size, buf }, i) => {
+    const e = 6 + 16 * i;
+    header.writeUInt8(size >= 256 ? 0 : size, e); header.writeUInt8(size >= 256 ? 0 : size, e + 1);
+    header.writeUInt16LE(1, e + 4); header.writeUInt16LE(32, e + 6);
+    header.writeUInt32LE(buf.length, e + 8); header.writeUInt32LE(offset, e + 12);
+    offset += buf.length;
+  });
+  return Buffer.concat([header, ...pngs.map(p => p.buf)]);
+}
+
+async function buildBrand() {
+  const assets = path.join(DIST, 'assets');
+
+  // الشعار الملوّن للترويسة كما هو بعد svgo
+  await cp(path.join(BRAND, 'falcon_color.svg'), path.join(assets, 'falcon_color.svg'));
+
+  // favicon.svg: الظل بلون الموقع في viewBox مربع، ولون رملي في الوضع الداكن
+  const silhouette = await readFile(path.join(BRAND, 'falcon_silhouette.svg'), 'utf8');
+  const vb = await squareViewBox(path.join(BRAND, 'falcon_silhouette.svg'));
+  const favicon = silhouette
+    .replace(/<svg[^>]*>/, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}"><style>path{fill:${INK}}@media (prefers-color-scheme:dark){path{fill:${SAND}}}</style>`);
+  await writeFile(path.join(DIST, 'favicon.svg'), favicon);
+
+  // نسخة بلون ثابت للتحويل إلى PNG (sharp لا يطبّق media queries)
+  const solid = Buffer.from(favicon.replace(/<style>.*?<\/style>/, `<style>path{fill:${INK}}</style>`));
+  const png = (size, opts = {}) => {
+    const pad = opts.pad || 0, inner = Math.round(size * (1 - 2 * pad));
+    return sharp(solid, { density: 300 }).resize(inner, inner).png().toBuffer()
+      .then(buf => sharp({ create: { width: size, height: size, channels: 4, background: opts.bg || { r: 0, g: 0, b: 0, alpha: 0 } } })
+        .composite([{ input: buf, gravity: 'center' }]).png({ compressionLevel: 9 }).toBuffer());
+  };
+  await writeFile(path.join(DIST, 'favicon.ico'), ico(await Promise.all([16, 32, 48].map(async size => ({ size, buf: await png(size) })))));
+  await writeFile(path.join(DIST, 'apple-touch-icon.png'), await png(180, { bg: PAPER, pad: 0.1 }));
+  await writeFile(path.join(DIST, 'icon-192.png'), await png(192, { bg: PAPER, pad: 0.1 }));
+  await writeFile(path.join(DIST, 'icon-512.png'), await png(512, { bg: PAPER, pad: 0.1 }));
+
+  // شعار JSON-LD: الصقر الملوّن على خلفية رملية مربعة
+  const colorVb = await squareViewBox(path.join(BRAND, 'falcon_color.svg'));
+  const colorSquare = Buffer.from((await readFile(path.join(BRAND, 'falcon_color.svg'), 'utf8'))
+    .replace(/<svg[^>]*>/, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${colorVb}">`));
+  const logo = await sharp(colorSquare, { density: 200 }).resize(432, 432).png().toBuffer();
+  await sharp({ create: { width: 512, height: 512, channels: 4, background: PAPER } })
+    .composite([{ input: logo, gravity: 'center' }]).png({ compressionLevel: 9 }).toFile(path.join(assets, 'logo.png'));
+
+  await writeFile(path.join(DIST, 'site.webmanifest'), JSON.stringify({
+    name: '4saud.net: دفتر صقّار من البر',
+    short_name: '4saud',
+    lang: 'ar',
+    dir: 'rtl',
+    start_url: '/',
+    display: 'standalone',
+    background_color: PAPER,
+    theme_color: '#18202f',
+    icons: [
+      { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+      { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+    ],
+  }, null, 2) + '\n');
 }
 
 // ---------- التحويلات من الروابط القديمة ----------
@@ -150,9 +230,10 @@ async function main() {
 
   await buildMedia(gallery);
   await buildBrandImages();
+  await buildBrand();
 
   // الأصول الثابتة
-  const assetFiles = ['style.css', 'wx.js', 'live.js', 'icons.svg', 'favicon.svg'];
+  const assetFiles = ['style.css', 'wx.js', 'live.js', 'icons.svg'];
   const hash = createHash('sha1');
   for (const f of assetFiles) {
     const buf = await readFile(path.join(ROOT, 'src/assets', f));

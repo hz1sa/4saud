@@ -67,7 +67,10 @@ small { font-size: .82em; }
 .site-head .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 2rem; justify-content: space-between; }
 .brand { display: flex; align-items: center; gap: .6rem; color: var(--star); text-decoration: none; }
 .brand:hover { color: #fff; }
-.brand .ic { width: 2.4rem; height: 2.4rem; color: var(--gold-soft); transform: scaleX(-1) rotate(-4deg); }
+/* الصقر الملوّن بنّي داكن، فنضعه على قرص رملي فاتح حتى يظهر على كحلي الترويسة */
+.brand-mark { flex: none; width: 54px; height: 54px; border-radius: 50%; background: var(--paper-2); box-shadow: inset 0 0 0 2px var(--gold-soft); display: grid; place-items: center; }
+.brand-mark img { width: 40px; height: 41px; }
+@media (max-width: 480px) { .brand-mark { width: 46px; height: 46px; } .brand-mark img { width: 34px; height: 35px; } }
 .brand-name { font-family: var(--f-mark); font-size: 1.55rem; letter-spacing: .02em; line-height: 1; }
 .brand-tag { display: block; font-size: .78rem; opacity: .7; margin-top: .25rem; font-family: var(--f-body); }
 .nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .1rem 1.3rem; }
