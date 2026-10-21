@@ -20,8 +20,7 @@ npm run serve          # http://localhost:8080 يحاكي GitHub Pages
 | `src/content/articles/*.html` | المقالات: بيانات JSON في تعليق أعلى الملف، ثم النص |
 | `src/pages.mjs` و`src/layout.mjs` | قوالب الصفحات |
 | `src/assets/` | CSS، والأيقونات، و`wx.js` (عرض الطقس، مشترك بين البناء والمتصفح)، و`live.js` (التحديث المباشر) |
-| `scripts/link-audit.mjs` | مدقّق روابط saudiweather.net (لا يضيف روابط؛ يتحقق ويطبع التوزيع) |
-| `data/saudiweather.json` | روابط المدن المتحقق منها على saudiweather.net ونوع نص الرابط لكل مدينة |
+
 | `data/cities.json` | إحداثيات المدن من Open-Meteo Geocoding (`npm run geocode`) |
 | `data/climate.json` | متوسطات 2016–2025 من أرشيف ERA5 (`npm run climate`) |
 | `data/gallery.json` | صور المعرض وأوصافها |
