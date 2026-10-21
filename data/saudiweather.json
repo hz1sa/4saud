@@ -1,0 +1,24 @@
+{
+  "_note": "روابط صفحات المدن على saudiweather.net، طُلبت كلها فعلياً في 21 أكتوبر 2026 وأعادت 200 بعنوان المدينة الصحيحة. name: الاسم في نص الرابط «طقس {name}». path = null: لا توجد صفحة متحقق منها، فالرابط إلى الصفحة الرئيسية بنص anchor («الطقس» أو «طقس السعودية»). variant: صيغة الجملة في مقدمة صفحة المدينة (a / b / c / home).",
+  "cities": {
+    "riyadh":   { "path": "Riyadh", "name": "الرياض", "variant": "a" },
+    "jeddah":   { "path": "Jeddah", "name": "جدة", "variant": "b" },
+    "makkah":   { "path": "Mecca",  "name": "مكة المكرمة", "variant": "c" },
+    "madinah":  { "path": "OEMA",   "name": "المدينة المنورة", "variant": "b" },
+    "dammam":   { "path": "OEDF",   "name": "الدمام", "variant": "a" },
+    "khobar":   { "path": null,     "variant": "home", "anchor": "الطقس" },
+    "taif":     { "path": "Taif",   "name": "الطائف", "variant": "b" },
+    "abha":     { "path": "abha",   "name": "أبها", "variant": "c" },
+    "tabuk":    { "path": "OETB",   "name": "تبوك", "variant": "a" },
+    "buraydah": { "path": "OEGS",   "name": "القصيم", "variant": "b" },
+    "hail":     { "path": "OEHL",   "name": "حائل", "variant": "c" },
+    "jazan":    { "path": "Jazan",  "name": "جازان", "variant": "b" },
+    "najran":   { "path": "Najran", "name": "نجران", "variant": "a" },
+    "alahsa":   { "path": "OEAH",   "name": "الأحساء", "variant": "b" },
+    "jubail":   { "path": null,     "variant": "home", "anchor": "طقس السعودية" },
+    "yanbu":    { "path": "OEYN",   "name": "ينبع", "variant": "b" },
+    "sakaka":   { "path": "Sakaka", "name": "سكاكا", "variant": "a" },
+    "arar":     { "path": "Arar",   "name": "عرعر", "variant": "c" },
+    "albaha":   { "path": "OEBA",   "name": "الباحة", "variant": "b" }
+  }
+}

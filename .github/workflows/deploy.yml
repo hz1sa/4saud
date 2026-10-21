@@ -1,0 +1,46 @@
+# يبني الموقع وينشره على GitHub Pages عند كل دفع إلى main، وكل 3 ساعات لتحديث صفحات الطقس.
+name: build-and-deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 */3 * * *" # كل 3 ساعات (بتوقيت UTC)، بعد الساعة بدقائق لتجنّب ازدحام بداية الساعة
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: البناء (يجلب بيانات Open-Meteo)
+        run: npm run build
+      - name: الفحص (h1 والروابط وقواعد الروابط)
+        run: npm run check
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,211 @@
+[
+  {
+    "slug": "riyadh",
+    "ar": "الرياض",
+    "en": "Riyadh",
+    "lat": 24.68773,
+    "lon": 46.72185,
+    "elevation": 612,
+    "admin1": "Riyadh Region",
+    "population": 4205961,
+    "geonameId": 108410
+  },
+  {
+    "slug": "jeddah",
+    "ar": "جدة",
+    "en": "Jeddah",
+    "lat": 21.49012,
+    "lon": 39.18624,
+    "elevation": 7,
+    "admin1": "Mecca Region",
+    "population": 4697000,
+    "geonameId": 105343
+  },
+  {
+    "slug": "makkah",
+    "ar": "مكة المكرمة",
+    "en": "Mecca",
+    "lat": 21.42664,
+    "lon": 39.82563,
+    "elevation": 333,
+    "admin1": "Mecca Region",
+    "population": 1578722,
+    "geonameId": 104515
+  },
+  {
+    "slug": "madinah",
+    "ar": "المدينة المنورة",
+    "en": "Medina",
+    "lat": 24.46861,
+    "lon": 39.61417,
+    "elevation": 603,
+    "admin1": "Medina Region",
+    "population": 1300000,
+    "geonameId": 109223
+  },
+  {
+    "slug": "dammam",
+    "ar": "الدمام",
+    "en": "Dammam",
+    "lat": 26.43442,
+    "lon": 50.10326,
+    "elevation": 10,
+    "admin1": "Eastern Province",
+    "population": 1252523,
+    "geonameId": 110336
+  },
+  {
+    "slug": "khobar",
+    "ar": "الخبر",
+    "en": "Khobar",
+    "lat": 26.27944,
+    "lon": 50.20833,
+    "elevation": 8,
+    "admin1": "Eastern Province",
+    "population": 165799,
+    "geonameId": 109323
+  },
+  {
+    "slug": "taif",
+    "ar": "الطائف",
+    "en": "Ta'if",
+    "lat": 21.27028,
+    "lon": 40.41583,
+    "elevation": 1672,
+    "admin1": "Mecca Region",
+    "population": 688693,
+    "geonameId": 107968
+  },
+  {
+    "slug": "abha",
+    "ar": "أبها",
+    "en": "Abhā",
+    "lat": 18.21639,
+    "lon": 42.50528,
+    "elevation": 2228,
+    "admin1": "'Asir Region",
+    "population": 210886,
+    "geonameId": 110690
+  },
+  {
+    "slug": "tabuk",
+    "ar": "تبوك",
+    "en": "Tabuk",
+    "lat": 28.3998,
+    "lon": 36.57151,
+    "elevation": 768,
+    "admin1": "Tabuk Region",
+    "population": 667000,
+    "geonameId": 101628
+  },
+  {
+    "slug": "buraydah",
+    "ar": "بريدة",
+    "en": "Buraidah",
+    "lat": 26.32599,
+    "lon": 43.97497,
+    "elevation": 606,
+    "admin1": "Al-Qassim Region",
+    "population": 745353,
+    "geonameId": 107304
+  },
+  {
+    "slug": "hail",
+    "ar": "حائل",
+    "en": "Ha'il",
+    "lat": 27.52188,
+    "lon": 41.69073,
+    "elevation": 1002,
+    "admin1": "Ha'il Region",
+    "population": 605930,
+    "geonameId": 106281
+  },
+  {
+    "slug": "jazan",
+    "ar": "جازان",
+    "en": "Jizan",
+    "lat": 16.88917,
+    "lon": 42.55111,
+    "elevation": 19,
+    "admin1": "Jazan Region",
+    "population": 105198,
+    "geonameId": 105299
+  },
+  {
+    "slug": "najran",
+    "ar": "نجران",
+    "en": "Najran",
+    "lat": 17.49326,
+    "lon": 44.12766,
+    "elevation": 1310,
+    "admin1": "Najran Region",
+    "population": 505652,
+    "geonameId": 103630
+  },
+  {
+    "slug": "alahsa",
+    "ar": "الأحساء",
+    "en": "Hofuf",
+    "lat": 25.36467,
+    "lon": 49.58764,
+    "elevation": 159,
+    "admin1": "Eastern Province",
+    "population": 293179,
+    "geonameId": 109571
+  },
+  {
+    "slug": "jubail",
+    "ar": "الجبيل",
+    "en": "Jubail",
+    "lat": 27.0174,
+    "lon": 49.62251,
+    "elevation": 5,
+    "admin1": "Eastern Province",
+    "population": 237274,
+    "geonameId": 109435
+  },
+  {
+    "slug": "yanbu",
+    "ar": "ينبع",
+    "en": "Yanbu",
+    "lat": 24.08954,
+    "lon": 38.0618,
+    "elevation": 6,
+    "admin1": "Medina Region",
+    "population": 200161,
+    "geonameId": 100425
+  },
+  {
+    "slug": "sakaka",
+    "ar": "سكاكا",
+    "en": "Sakakah",
+    "lat": 29.96974,
+    "lon": 40.20641,
+    "elevation": 555,
+    "admin1": "Al Jawf Region",
+    "population": 128332,
+    "geonameId": 102527
+  },
+  {
+    "slug": "arar",
+    "ar": "عرعر",
+    "en": "Arar",
+    "lat": 30.97531,
+    "lon": 41.03808,
+    "elevation": 555,
+    "admin1": "Northern Borders Region",
+    "population": 148540,
+    "geonameId": 108512
+  },
+  {
+    "slug": "albaha",
+    "ar": "الباحة",
+    "en": "Al Bahah",
+    "lat": 20.01288,
+    "lon": 41.46767,
+    "elevation": 2176,
+    "admin1": "Al Bahah Region",
+    "population": 88419,
+    "geonameId": 109953
+  }
+]
