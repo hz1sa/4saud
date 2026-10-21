@@ -68,7 +68,7 @@ export function home(ctx) {
   <div>
     <h2 id="about-h" style="margin-top:0">عن هذا الدفتر</h2>
     <p>بدأ 4saud.net قبل سنوات طويلة صفحات بسيطة فيها صور من رحلات المقناص: صقور على وكورها، وغبار يغطّي الأفق، وبرد أبيض في الوادي. واليوم أعدت بناءه ليكون مكاناً أجمع فيه ما أعرفه، وما تحققت منه، عن الصقارة والحبارى.</p>
-    <p>ولأن <a href="${SW_HOME}">الطقس</a> يقرر نصف المقناص، أضفت صفحات لأكبر مدن المملكة تعرض الحالة الآن وتوقعات الساعات والأيام القادمة، تتحدّث تلقائياً من بيانات Open-Meteo.</p>
+    <p>ولأن <a href="${SW_HOME}">الطقس</a> يقرر نصف المقناص، أضفت صفحات لأكبر مدن المملكة تعرض الحالة الآن وتوقعات الساعات والأيام القادمة، تتحدّث.</p>
   </div>
 </section>
 
@@ -242,7 +242,7 @@ export function weatherIndex(ctx) {
       ...ctx.pageBase,
       path: '/weather/',
       title: 'طقس السعودية اليوم: الحالة الآن وتوقعات 7 أيام لأكبر المدن | 4saud.net',
-      description: `الطقس الآن في ${cities.length} مدينة سعودية: الحرارة والرياح والحالة الجوية، مع توقعات 48 ساعة و7 أيام لكل مدينة، تتحدّث كل 3 ساعات من بيانات Open-Meteo.`,
+      description: `الطقس الآن في ${cities.length} مدينة سعودية: الحرارة والرياح والحالة الجوية، مع توقعات 48 ساعة و7 أيام لكل مدينة، تتحدّث كل 3 ساعات.`,
       crumbs: [['/', 'الرئيسية'], ['/weather/', 'الطقس']],
       body,
       scripts: [`<script type="module" src="/assets/live.js?v=${ctx.pageBase.assetVersion}"></script>`],
@@ -258,7 +258,7 @@ function climateBlurb(c, cl) {
   const region = REGIONS[c.admin1] || '';
   const elev = Math.round(c.elevation);
   const lines = [];
-  lines.push(`تقع ${c.ar} في ${region}${COASTAL.has(c.slug) ? ' على الساحل' : ''}، على ارتفاع نحو ${elev.toLocaleString('en-US')} متر فوق سطح البحر بحسب بيانات Open-Meteo.`);
+  lines.push(`تقع ${c.ar} في ${region}${COASTAL.has(c.slug) ? ' على الساحل' : ''}، على ارتفاع نحو ${elev.toLocaleString('en-US')} متر فوق سطح البحر.`);
   lines.push(`وحين حسبنا متوسطات السنوات العشر من 2016 إلى 2025، كان ${wx.MONTHS[hot]} أحرّ شهورها بمتوسط عظمى ${fmt1(m[hot].tmax)}°م، و${wx.MONTHS[cold]} أبردها بمتوسط صغرى ${fmt1(m[cold].tmin)}°م.`);
   lines.push(`ويقدَّر مجموع الهطول السنوي فيها بنحو ${cl.annualPrecip} ملم في المتوسط، وأكثر الشهور مطراً ${wx.MONTHS[wet]}. ومتوسط الرطوبة النسبية في أغسطس نحو ${Math.round(m[7].rh)}٪، وفي يناير نحو ${Math.round(m[0].rh)}٪.`);
   return lines;
@@ -274,7 +274,7 @@ export function weatherCity(ctx, c) {
   const rel = ctx.cityArticles(c.slug).map(a => `<li><a href="/articles/${a.slug}/">${esc(a.title)}</a></li>`).join('');
 
   const table = `<div class="climate-table prose" style="max-width:none"><table>
-    <caption>متوسطات شهرية محسوبة من بيانات إعادة التحليل ERA5 عبر Open-Meteo للفترة 2016–2025 (تقديرات شبكية قد تختلف عن قراءات المحطات)</caption>
+    <caption>متوسطات شهرية محسوبة من بيانات إعادة التحليل ERA5 للفترة 2016–2025 (تقديرات شبكية قد تختلف عن قراءات المحطات)</caption>
     <thead><tr><th scope="col">الشهر</th>${wx.MONTHS.map(n => `<th scope="col">${n}</th>`).join('')}</tr></thead>
     <tbody>
       <tr><th scope="row">العظمى °م</th>${m.map(x => `<td>${fmt1(x.tmax)}</td>`).join('')}</tr>
@@ -287,7 +287,7 @@ export function weatherCity(ctx, c) {
   <h1>طقس ${esc(c.ar)} اليوم وتوقعات الأيام القادمة</h1>
   <p class="lede">الحالة الجوية الآن في ${esc(c.ar)}، وتوقعات الساعات الثماني والأربعين القادمة والأيام السبعة: الحرارة، والإحساس، والرطوبة، والرياح واتجاهها، واحتمال الأمطار.</p>
 </header>
-<p>هذه صفحة طقس ${esc(c.ar)} كما تعرضها نماذج Open-Meteo، تُحدَّث تلقائياً كل ثلاث ساعات، ويحدّثها متصفحك مباشرة عند فتح الصفحة. الأوقات كلها بتوقيت الرياض. ${saudiWeatherSentence(c, ctx.saudiweather.cities[c.slug])}</p>
+<p>هذه صفحة طقس ${esc(c.ar)}، تُحدَّث تلقائياً كل ثلاث ساعات، ويحدّثها متصفحك مباشرة عند فتح الصفحة. الأوقات كلها بتوقيت الرياض. ${saudiWeatherSentence(c, ctx.saudiweather.cities[c.slug])}</p>
 
 <h2 id="now-h">الحالة الآن في ${esc(c.ar)}</h2>
 <section class="now" id="now" aria-labelledby="now-h" aria-live="polite" data-nolink>
@@ -388,8 +388,6 @@ export function linksPage(ctx) {
 <ul class="linklist">
   ${L('https://ncm.gov.sa/', 'المركز الوطني للأرصاد', 'الجهة الرسمية للتنبيهات والإنذارات الجوية، وحلّ محل الموقع القديم pme.gov.sa.')}
   ${L('https://www.saudiweather.net/', 'طقس السعودية', 'توقعات الطقس لمدن المملكة (saudiweather.net).')}
-  ${L('https://open-meteo.com/', 'Open-Meteo', 'مصدر بيانات صفحات الطقس في هذا الموقع.')}
-  ${L('https://wxmaps.org/', 'WXMAPS', 'خرائط نماذج الطقس العالمية.')}
 </ul>
 <h2>الأخبار</h2>
 <ul class="linklist">
