@@ -16,7 +16,7 @@ export const SW_HOST = 'saudiweather.net';
 const SW_HOME = 'https://www.saudiweather.net/';
 const verified = JSON.parse(readFileSync(new URL('../data/saudiweather.json', import.meta.url), 'utf8'));
 // رابط عميق → اسم المدينة المسموح في نصه
-const DEEP = new Map(Object.values(verified.cities).filter(c => c.path).map(c => [`${SW_HOME}weather/sa/${c.path}`, c.name]));
+const DEEP = new Map(Object.values(verified.cities).filter(c => c.path).map(c => [`${SW_HOME}${c.path}`, c.name]));
 export const ALLOWED = new Set([SW_HOME, ...DEEP.keys()]);
 const HOME_ANCHORS = ['الطقس', 'طقس السعودية'];
 
@@ -120,7 +120,7 @@ export function printReport(results) {
   console.log('\nروابط saudiweather.net في كل صفحة:');
   for (const r of results) {
     const flag = r.errors.length ? '✗' : '✓';
-    const list = r.links.map(l => `«${l.text}»${l.href === SW_HOME ? '' : ' ↗' + l.href.split('/sa/')[1]} [${l.where}]`).join('، ') || '—';
+    const list = r.links.map(l => `«${l.text}»${l.href === SW_HOME ? '' : ' ↗' + l.href.slice(SW_HOME.length)} [${l.where}]`).join('، ') || '—';
     console.log(`  ${flag} ${String(r.links.length)} | ${r.path} | ${list}`);
     for (const e of r.errors) console.log(`      ✗ ${e}`);
     for (const w of r.warnings || []) console.log(`      ⚠ ${w}`);

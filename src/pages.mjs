@@ -23,7 +23,7 @@ function saudiWeatherSentence(c, sw) {
     const where = sw.anchor === 'الطقس' ? `منصة ${a} السعودي` : `منصة ${a}`;
     return `ولمن يحب المقارنة بين أكثر من مصدر، تجد توقعات مدن المملكة أيضاً على ${where}.`;
   }
-  const a = `<a href="${SW_HOME}weather/sa/${sw.path}">طقس ${esc(sw.name)}</a>`;
+  const a = `<a href="${SW_HOME}${sw.path}">طقس ${esc(sw.name)}</a>`;
   if (sw.variant === 'a') return `ولمن يحب المقارنة بين أكثر من مصدر، راجع أيضاً ${a} على saudiweather.net.`;
   if (sw.variant === 'b') return `ويمكنك مقارنة هذه الأرقام مع صفحة ${a} على saudiweather.net.`;
   return `وتجد صفحة ${a} أيضاً على منصة طقس السعودية لمن يحب المقارنة بين أكثر من مصدر.`;
