@@ -148,8 +148,10 @@ function ico(pngs) {
 async function buildBrand() {
   const assets = path.join(DIST, 'assets');
 
-  // الشعار الملوّن للترويسة كما هو بعد svgo
-  await cp(path.join(BRAND, 'falcon_color.svg'), path.join(assets, 'falcon_color.svg'));
+  // شعار الترويسة: صور WebP صغيرة من الصقر الملوّن (يُعرض بعرض 34–40px) بدل SVG حجمه 110 KiB
+  for (const w of [40, 80, 120]) {
+    await sharp(path.join(BRAND, 'falcon_color.svg'), { density: 300 }).resize({ width: w }).webp({ quality: 90, alphaQuality: 100 }).toFile(path.join(assets, `logo-${w}.webp`));
+  }
 
   // favicon.svg: الظل بلون الموقع في viewBox مربع، ولون رملي في الوضع الداكن
   const silhouette = await readFile(path.join(BRAND, 'falcon_silhouette.svg'), 'utf8');
@@ -233,15 +235,17 @@ async function main() {
   await buildBrand();
 
   // الأصول الثابتة
-  const assetFiles = ['style.css', 'wx.js', 'live.js', 'icons.svg'];
-  const hash = createHash('sha1');
-  for (const f of assetFiles) {
-    const buf = await readFile(path.join(ROOT, 'src/assets', f));
-    hash.update(buf);
-    await writeFile(path.join(DIST, 'assets', f), buf);
-  }
-  const assetVersion = hash.digest('hex').slice(0, 8);
-  await out('weather/cities.json', JSON.stringify(Object.fromEntries(cities.map(c => [c.slug, { lat: c.lat, lon: c.lon }]))));
+  // الأصول الثابتة. style.css يُضمَّن داخل <style> في كل صفحة، وwx.js يُدمج في live.js،
+  // فتصبح سلسلة الطقس الحي طلباً واحداً للسكربت ثم طلب Open-Meteo.
+  const css = (await readFile(path.join(ROOT, 'src/assets/style.css'), 'utf8')).trim();
+  const wxSrc = await readFile(path.join(ROOT, 'src/assets/wx.js'), 'utf8');
+  const liveSrc = await readFile(path.join(ROOT, 'src/assets/live.js'), 'utf8');
+  const liveBundle = wxSrc.replace(/^export \{[^}]*\};?\n/m, '').replace(/^export /gm, '') + '\n' + liveSrc.replace(/^import .*\n/m, '');
+  const icons = await readFile(path.join(ROOT, 'src/assets/icons.svg'));
+  await writeFile(path.join(DIST, 'assets', 'live.js'), liveBundle);
+  await writeFile(path.join(DIST, 'assets', 'icons.svg'), icons);
+  await cp(path.join(ROOT, 'src/assets/fonts'), path.join(DIST, 'assets', 'fonts'), { recursive: true });
+  const assetVersion = createHash('sha1').update(liveBundle).update(icons).digest('hex').slice(0, 8);
 
   const nearby = Object.fromEntries(cities.map(c => [c.slug,
     cities.filter(o => o !== c).sort((a, b) => haversine(c, a) - haversine(c, b)).slice(0, 3).map(o => o.slug)]));
@@ -250,7 +254,7 @@ async function main() {
     return hit.length ? hit : articles.filter(a => ['weather-hunting-grounds', 'houbara-winter-season'].includes(a.slug));
   };
 
-  const ctx = { cities, climate, gallery, articles, saudiweather, forecast, generatedAt, nearby, cityArticles, pageBase: { assetVersion } };
+  const ctx = { cities, climate, gallery, articles, saudiweather, forecast, generatedAt, nearby, cityArticles, pageBase: { assetVersion, css } };
 
   const pages = [
     P.home(ctx),

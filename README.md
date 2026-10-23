@@ -25,6 +25,7 @@ npm run serve          # http://localhost:8080 يحاكي GitHub Pages
 | `data/cities.json` | إحداثيات المدن من Open-Meteo Geocoding (`npm run geocode`) |
 | `data/climate.json` | متوسطات 2016–2025 من أرشيف ERA5 (`npm run climate`) |
 | `data/gallery.json` | صور المعرض وأوصافها |
+| `src/assets/fonts/` | خطوط woff2 مستضافة ذاتياً ومقصوصة على العربية القياسية. تُعاد بـ `scripts/fonts.py` بعد `npm run build` (يحتاج fonttools 4.38 وbrotli، والأوامر في رأس الملف). أعِد تشغيله إذا أضفت نصاً جديداً بخط Reem Kufi |
 | `src/assets/brand/` | الشعار الأصلي (VTracer)، ونسخه المحسّنة في `brand-opt/` عبر `npx svgo --config svgo.config.cjs`. البناء يولّد منها favicon وأيقونات التطبيق |
 | `legacy/` | الموقع القديم كما هو. صوره تُنسخ إلى `/images/`، وصفحاته تُحوَّل إلى الروابط الجديدة |
 | `VERIFY.md` | معلومات تحتاج مراجعة |

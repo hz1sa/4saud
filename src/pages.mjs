@@ -33,11 +33,25 @@ const fmtDate = iso => { const [y, m, d] = iso.split('-').map(Number); return `$
 const fmt1 = n => (Math.round(n * 10) / 10).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 // صورة من المعرض بصيغة WebP مع srcset
+// تحميل مسبق لصورة LCP بنفس srcset و sizes المستعملة في <img>
+function preloadImage(img, sizes) {
+  return `<link rel="preload" as="image" href="/media/${img.id}-960.webp" imagesrcset="/media/${img.id}-480.webp 480w, /media/${img.id}-960.webp 960w" imagesizes="${sizes}" fetchpriority="high">`;
+}
+
+// إحداثيات المدن التي يحدّثها live.js في الصفحة، مضمّنة وقت البناء بدل طلب cities.json
+function wxPoints(cities) {
+  const map = Object.fromEntries(cities.map(c => [c.slug, { lat: c.lat, lon: c.lon }]));
+  return `<script type="application/json" id="wx-points">${JSON.stringify(map)}</script>`;
+}
+
 export function picture(img, { sizes = '(max-width: 860px) 100vw, 50vw', lazy = true, cls = '' } = {}) {
   return `<img${cls ? ` class="${cls}"` : ''} src="/media/${img.id}-960.webp" srcset="/media/${img.id}-480.webp 480w, /media/${img.id}-960.webp 960w" sizes="${sizes}" width="${img.w}" height="${img.h}" alt="${esc(img.alt)}"${lazy ? ' loading="lazy" decoding="async"' : ' fetchpriority="high"'}>`;
 }
 
 // ===== الرئيسية =====
+const HERO_SIZES = '(max-width: 860px) 100vw, 40vw';
+const ARTICLE_IMG_SIZES = '(max-width: 860px) 100vw, 680px';
+
 export function home(ctx) {
   const { articles, gallery, cities, forecast } = ctx;
   const g = id => gallery.find(x => x.id === id);
@@ -58,7 +72,7 @@ export function home(ctx) {
     <a class="more" href="/articles/">اقرأ المقالات ${ic('arrow')}</a>
   </div>
   <figure class="hero-photo">
-    ${picture(g('396'), { lazy: false, sizes: '(max-width: 860px) 100vw, 40vw' })}
+    ${picture(g('396'), { lazy: false, sizes: HERO_SIZES })}
     <figcaption>من أرشيف 4saud: صقّار بين صقوره على وكورها في أرض رملية</figcaption>
   </figure>
 </section>
@@ -93,6 +107,7 @@ ${divider('falcon')}
 <section class="sky" aria-labelledby="sky-h" id="sky">
   <h2 id="sky-h">الجو في مدن المقناص الآن</h2>
   <ul class="sky-list">${sky}</ul>
+  ${wxPoints(skyCities.map(slug => cities.find(x => x.slug === slug)))}
   <p style="margin:0"><a href="/weather/">كل المدن وتوقعات الأيام السبعة</a></p>
 </section>
 
@@ -112,11 +127,13 @@ ${divider('falcon')}
       title: 'دفتر صقّار: صيد الحبارى بالصقور وطقس مدن السعودية | 4saud.net',
       description: 'مقالات موثّقة عن الصقارة وصيد الحبارى ومواسمه وأنظمته في السعودية، وصفحات تعرض الطقس الحالي وتوقعات 7 أيام لأكبر المدن، بقلم صقّار من البر.',
       image: `/media/396-960.webp`,
+      head: preloadImage(g('396'), HERO_SIZES),
       imageAlt: g('396').alt,
       body,
       jsonld: [{
         '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, alternateName: 'فور سعود', url: SITE + '/', inLanguage: 'ar', publisher: PUBLISHER,
       }],
+      live: true,
       scripts: [`<script type="module" src="/assets/live.js?v=${ctx.pageBase.assetVersion}"></script>`],
     }),
   };
@@ -171,7 +188,7 @@ export function article(ctx, a) {
   </header>
   <div class="layout">
     <div class="prose">
-      <figure>${picture(img, { lazy: false, sizes: '(max-width: 860px) 100vw, 680px' })}<figcaption>${esc(img.caption)}، من أرشيف 4saud</figcaption></figure>
+      <figure>${picture(img, { lazy: false, sizes: ARTICLE_IMG_SIZES })}<figcaption>${esc(img.caption)}، من أرشيف 4saud</figcaption></figure>
       ${a.html}
       <section class="sources" aria-labelledby="sources-h" data-nolink>
         <h2 id="sources-h">المصادر</h2>
@@ -199,7 +216,7 @@ export function article(ctx, a) {
       image: `/media/${img.id}-960.webp`,
       imageAlt: img.alt,
       crumbs: [['/', 'الرئيسية'], ['/articles/', 'المقالات'], [`/articles/${a.slug}/`, a.title]],
-      head: `<meta property="article:published_time" content="${a.date}">`,
+      head: `<meta property="article:published_time" content="${a.date}">\n${preloadImage(img, ARTICLE_IMG_SIZES)}`,
       body,
       jsonld: [{
         '@context': 'https://schema.org', '@type': 'Article',
@@ -232,6 +249,7 @@ export function weatherIndex(ctx) {
 <p>ولمن يحب المقارنة بين أكثر من مصدر، تجد توقعات مدن المملكة أيضاً على منصة <a href="${SW_HOME}">الطقس</a> السعودي.</p>
 <h2>المدن</h2>
 <ul class="city-grid" id="city-grid">${items}</ul>
+${wxPoints(cities)}
 <h2>قبل أن تخرج إلى البر</h2>
 <p>التوقعات أداة للتخطيط، لا بديل عن تنبيهات المركز الوطني للأرصاد. وإن كنت تخطط لرحلة مقناص فاقرأ <a href="/articles/weather-hunting-grounds/">الطقس في مواقع الصيد</a> و<a href="/articles/murabbaniyah-falconry/">المربعانية وموسم الصقارة</a>، ففيهما أرقام عن البرد والريح في مدن الشمال والوسط.</p>
 <p class="attrib" data-nolink>بيانات الطقس من <a href="https://open-meteo.com/">Open-Meteo.com</a> بترخيص <a href="https://creativecommons.org/licenses/by/4.0/deed.ar">CC BY 4.0</a>. الإحداثيات من واجهة Open-Meteo للبحث الجغرافي.</p>`;
@@ -245,6 +263,7 @@ export function weatherIndex(ctx) {
       description: `الطقس الآن في ${cities.length} مدينة سعودية: الحرارة والرياح والحالة الجوية، مع توقعات 48 ساعة و7 أيام لكل مدينة، تتحدّث كل 3 ساعات.`,
       crumbs: [['/', 'الرئيسية'], ['/weather/', 'الطقس']],
       body,
+      live: true,
       scripts: [`<script type="module" src="/assets/live.js?v=${ctx.pageBase.assetVersion}"></script>`],
     }),
   };
@@ -329,6 +348,7 @@ ${table}
       crumbs: [['/', 'الرئيسية'], ['/weather/', 'الطقس'], [`/weather/${c.slug}/`, c.ar]],
       head: `<meta name="geo.position" content="${c.lat};${c.lon}"><meta name="geo.placename" content="${esc(c.ar)}">`,
       body: `<div data-lat="${c.lat}" data-lon="${c.lon}" id="wx-city" hidden></div>${body}`,
+      live: true,
       scripts: [`<script type="module" src="/assets/live.js?v=${ctx.pageBase.assetVersion}"></script>`],
     }),
   };

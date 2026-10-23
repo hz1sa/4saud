@@ -36,7 +36,7 @@ function crumbsHtml(crumbs) {
 }
 
 /**
- * page: { path, title, description, crumbs:[[path,name]...], body, jsonld:[], ogType, image, imageAlt, head, scripts, noindex, section }
+ * page: { path, title, description, crumbs:[[path,name]...], body, jsonld:[], ogType, image, imageAlt, head, scripts, noindex, section, live, css }
  */
 export function layout(page) {
   const url = abs(page.path);
@@ -74,10 +74,9 @@ ${page.noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonica
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Reem+Kufi:wght@500&display=swap">
-<link rel="stylesheet" href="/assets/style.css?v=${page.assetVersion || ''}">
+<link rel="preload" href="/assets/fonts/plex-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/amiri-700.woff2" as="font" type="font/woff2" crossorigin>
+${page.live ? '<link rel="preconnect" href="https://api.open-meteo.com" crossorigin>\n' : ''}<style>${page.css}</style>
 ${page.head || ''}
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`).join('\n')}
 </head>
@@ -85,7 +84,7 @@ ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j).replac
 <a class="skip" href="#main">تخطَّ إلى المحتوى</a>
 <header class="site-head">
   <div class="wrap">
-    <a class="brand" href="/" aria-label="${SITE_NAME}: الصفحة الرئيسية"><span class="brand-mark"><img src="/assets/falcon_color.svg" alt="شعار 4saud" width="40" height="41"></span><span><span class="brand-name">4saud</span><span class="brand-tag">${SITE_TAG}</span></span></a>
+    <a class="brand" href="/" aria-label="${SITE_NAME}: الصفحة الرئيسية"><span class="brand-mark"><img src="/assets/logo-80.webp" srcset="/assets/logo-40.webp 40w, /assets/logo-80.webp 80w, /assets/logo-120.webp 120w" sizes="(max-width: 480px) 34px, 40px" alt="شعار 4saud" width="40" height="41"></span><span><span class="brand-name">4saud</span><span class="brand-tag">${SITE_TAG}</span></span></a>
     <nav class="nav" aria-label="القائمة الرئيسية"><ul>${nav}</ul></nav>
   </div>
   ${DUNES}
@@ -123,7 +122,7 @@ ${page.body}
       </div>
     </div>
     <div class="foot-base">
-      <span>${ic('star')} 4saud.net منذ 2005</span>
+      <span>${ic('star')} 4saud.net منذ 2002</span>
       <span><a href="/contact/">تواصل</a> · <a href="/sitemap.xml">خريطة الموقع</a></span>
     </div>
   </div>
